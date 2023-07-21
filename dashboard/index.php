@@ -1,10 +1,9 @@
 
 <?php
-include_once('../layouts/main/header.php');
 session_start();
-
-var_dump($_SESSION['userId']);
-
+include_once('../layouts/main/header.php');
+$userLastName = isset($_SESSION['userLastName']) ? $_SESSION['userLastName'] : '';
+$userFirstName = isset($_SESSION['userFirstName']) ? $_SESSION['userFirstName'] : '';
 ?>
 
 <!-- Content Wrapper -->
@@ -185,9 +184,9 @@ var_dump($_SESSION['userId']);
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $userFirstName.' '.$userLastName ?></span>
                     <img class="img-profile rounded-circle"
-                        src="img/undraw_profile.svg">
+                        src="../img/undraw_profile.svg">
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

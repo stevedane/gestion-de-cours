@@ -1,7 +1,8 @@
 <?php
+session_start();
 include_once('connexion.php');
 
-$action = isset($_POST['action']) ? $_POST['action'] : '';
+$action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
 
 
 /** Register */
@@ -82,8 +83,6 @@ elseif($action == 'login'){
 
         /** Test Password */
         if($existPassword == sha1($password)){
-            session_start();
-
             $_SESSION['userId'] = $teacher['ID_EN'];
             $_SESSION['userFirstName'] = $teacher['PRENOM'];
             $_SESSION['userLastName'] = $teacher['NOM'];
@@ -104,7 +103,11 @@ elseif($action == 'login'){
 
             /** Test Password */
             if($existPassword == sha1($password)){
-    
+                $_SESSION['userId'] = $student['ID_EN'];
+                $_SESSION['userFirstName'] = $student['PRENOM'];
+                $_SESSION['userLastName'] = $student['NOM'];
+
+                header('Location:../dashboard');
             }
             else{
                 header('Location:../login/?notif=error');
@@ -112,4 +115,11 @@ elseif($action == 'login'){
         }
     }
 
+}
+elseif($action == 'logout'){
+    session_unset();
+
+    session_destroy();
+
+    header('Location:../login');
 }
