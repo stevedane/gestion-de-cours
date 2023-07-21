@@ -26,7 +26,7 @@ include_once('../layouts/guest/header.php'); ?>
                                         placeholder="Email Address" required>
                                 </div>
                                 <div class="form-group">
-                                    <select name="status" class="form-control form-control-user" id="status">
+                                    <select name="status" class="form-control" id="status" style="border-radius: 10rem;height: 50px;" required>
                                         <option value="">Choise your Role</option>
                                         <option value="teacher">Teacher</option>
                                         <option value="student">Student</option>
