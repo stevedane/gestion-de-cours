@@ -1,5 +1,4 @@
 <?php
-session_start();
 include_once('connexion.php');
 
 $action = isset($_REQUEST['action']) ? $_REQUEST['action'] : '';
@@ -122,4 +121,77 @@ elseif($action == 'logout'){
     session_destroy();
 
     header('Location:../login');
+}
+elseif($action == 'create_course'){
+    $name = isset($_POST['name']) ? $_POST['name'] : '';
+    $description = isset($_POST['description']) ? $_POST['description'] : '';
+    $teacher_id = isset($_POST['teacher_id']) ? $_POST['teacher_id'] : 0;
+
+    if((int)$teacher_id != 0){
+        $courseExist = $bdd->query("SELECT * FROM cours WHERE NOM='$name'");
+        $checkExist = $courseExist->fetch();
+
+        if(!is_array($checkExist)){
+            $registerSql = $bdd->prepare('INSERT INTO cours (NOM,DESCRIPTION,ID_EN,CREATE_AT,UPDATE_AT) VALUES(:nom,:description,:teacher,:create_at,:update_at)');
+
+            $checkInsert = $registerSql->execute(array(
+                'nom'=> $name,
+                'description'=> $description,
+                'teacher'=> $teacher_id,
+                'create_at'=> date('Y-m-d'),
+                'update_at'=> date('Y-m-d'),
+            ));
+
+            if($checkInsert){
+                header('Location:../course/');
+            }
+            else{
+                header('Location:../course/create.php');
+            }
+        }
+    }
+}
+elseif($action == 'update_course'){
+    $name = isset($_POST['name']) ? $_POST['name'] : '';
+    $description = isset($_POST['description']) ? $_POST['description'] : '';
+    $teacher_id = isset($_POST['teacher_id']) ? $_POST['teacher_id'] : 0;
+    $course_id = isset($_POST['course_id']) ? $_POST['course_id'] : 0;
+
+    if((int)$teacher_id != 0 && (int)$course_id != 0 ){
+        $courseExist = $bdd->query("SELECT * FROM cours WHERE ID_CO='$course_id'");
+        $checkExist = $courseExist->fetch();
+
+        if(is_array($checkExist)){
+            $registerSql = $bdd->prepare('UPDATE cours SET NOM=:nom ,DESCRIPTION=:description,UPDATE_AT=:update_at WHERE ID_CO='.$course_id);
+
+            $checkInsert = $registerSql->execute(array(
+                'nom'=> $name,
+                'description'=> $description,
+                'update_at'=> date('Y-m-d'),
+            ));
+
+            if($checkInsert){
+                header('Location:../course/');
+            }
+            else{
+                header('Location:../course/edit.php?id='.$course_id);
+            }
+        }
+    }
+}
+elseif($action == 'delete_course'){
+    $course_id = isset($_REQUEST['id']) ? $_REQUEST['id'] : 0;
+
+    $courseExist = $bdd->query("SELECT * FROM cours WHERE ID_CO='$course_id'");
+    $checkExist = $courseExist->fetch();
+
+        if(is_array($checkExist)){
+            $registerSql = $bdd->prepare('DELETE FROM cours WHERE ID_CO=:id');
+
+            $checkInsert = $registerSql->execute(array(
+                'id'=> $course_id,
+            ));
+
+            header('Location:../course/');
+        }
 }
